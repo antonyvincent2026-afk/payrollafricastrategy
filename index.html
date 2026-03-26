@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PayFlow Africa — Who to Talk To First</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0d0d0d;
+  --surface:#141414;
+  --surface2:#1c1c1c;
+  --border:#2a2a2a;
+  --text:#e8e6e0;
+  --muted:#666;
+  --dim:#3a3a3a;
+
+  --fire:#ff4500;
+  --fire-bg:#1a0800;
+  --fire-border:#5a1800;
+
+  --gold:#d4a847;
+  --gold-bg:#1a1200;
+  --gold-border:#4a3800;
+
+  --blue:#4a9eff;
+  --blue-bg:#001830;
+  --blue-border:#003060;
+
+  --green:#3ddc84;
+  --green-bg:#001a0d;
+  --green-border:#00501e;
+}
+
+body{background:var(--bg);color:var(--text);font-family:'Geist',sans-serif;min-height:100vh;}
+
+.page{max-width:960px;margin:0 auto;padding:48px 20px 80px;}
+
+/* TOP */
+.top{margin-bottom:40px;}
+.label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(28px,5vw,44px);font-weight:400;line-height:1.15;margin-bottom:14px;}
+h1 em{font-style:italic;color:var(--gold);}
+.intro{font-size:14px;color:var(--muted);max-width:600px;line-height:1.7;}
+
+/* DIVIDER */
+hr{border:none;border-top:1px solid var(--border);margin:32px 0;}
+
+/* SECTION LABEL */
+.sec{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.sec::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* THE LOGIC BOX */
+.logic{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:32px;}
+.logic-title{font-size:13px;font-weight:500;margin-bottom:10px;color:var(--text);}
+.logic-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+@media(max-width:640px){.logic-grid{grid-template-columns:1fr;}}
+.logic-cell{background:var(--surface2);border-radius:8px;padding:14px;}
+.logic-icon{font-size:20px;margin-bottom:6px;}
+.logic-head{font-size:12px;font-weight:500;margin-bottom:4px;}
+.logic-body{font-size:11px;color:var(--muted);line-height:1.55;}
+
+/* SEGMENT CARDS */
+.segments{display:flex;flex-direction:column;gap:16px;margin-bottom:32px;}
+
+.seg{border-radius:12px;border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:border-color .15s;}
+.seg:hover{border-color:#555;}
+
+.seg-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:18px 20px;}
+.seg-rank{font-family:'Instrument Serif',serif;font-size:32px;font-weight:400;color:var(--dim);min-width:28px;}
+.seg-info{}
+.seg-name{font-size:15px;font-weight:500;margin-bottom:2px;}
+.seg-sub{font-size:12px;color:var(--muted);}
+.seg-badge{font-size:11px;font-weight:500;padding:4px 12px;border-radius:100px;white-space:nowrap;}
+.seg-chevron{color:var(--muted);font-size:14px;transition:transform .2s;}
+.seg.open .seg-chevron{transform:rotate(180deg);}
+
+.seg-body{display:none;padding:0 20px 20px;}
+.seg.open .seg-body{display:block;}
+
+/* Colour variants */
+.seg.fire{background:var(--fire-bg);border-color:var(--fire-border);}
+.seg.fire .seg-badge{background:#3a1000;color:var(--fire);border:1px solid var(--fire-border);}
+.seg.fire .seg-rank{color:#3a1500;}
+.seg.fire:hover{border-color:var(--fire);}
+
+.seg.gold{background:var(--gold-bg);border-color:var(--gold-border);}
+.seg.gold .seg-badge{background:#2a2000;color:var(--gold);border:1px solid var(--gold-border);}
+.seg.gold .seg-rank{color:#3a2800;}
+.seg.gold:hover{border-color:var(--gold);}
+
+.seg.blue{background:var(--blue-bg);border-color:var(--blue-border);}
+.seg.blue .seg-badge{background:#001428;color:var(--blue);border:1px solid var(--blue-border);}
+.seg.blue .seg-rank{color:#001830;}
+.seg.blue:hover{border-color:var(--blue);}
+
+/* DETAIL GRID inside segment */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+@media(max-width:540px){.detail-grid{grid-template-columns:1fr;}}
+.detail-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.detail-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.detail-val{font-size:13px;line-height:1.55;}
+
+/* PAIN LEVEL BAR */
+.pain-bar{margin-bottom:14px;}
+.pain-label{font-size:11px;color:var(--muted);margin-bottom:5px;}
+.bar-track{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;transition:width .5s ease;}
+.fire-fill{background:var(--fire);}
+.gold-fill{background:var(--gold);}
+.blue-fill{background:var(--blue);}
+
+/* HOW TO FIND THEM */
+.find-section{margin-bottom:14px;}
+.find-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.find-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;}
+.find-chip{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:11px;line-height:1.4;}
+.find-chip strong{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+
+/* QUESTIONS BOX */
+.q-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
+.q-box-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.q-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.q-list li{font-size:12px;color:var(--text);padding-left:14px;position:relative;line-height:1.5;}
+.q-list li::before{content:'→';position:absolute;left:0;color:var(--muted);}
+
+/* WINNER BANNER */
+.winner{background:var(--fire-bg);border:1px solid var(--fire);border-radius:12px;padding:20px 24px;margin-bottom:32px;}
+.winner-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.fire-icon{font-size:28px;}
+.winner-title{font-family:'Instrument Serif',serif;font-size:20px;}
+.winner-body{font-size:13px;color:rgba(232,230,224,.7);line-height:1.7;}
+.winner-body strong{color:var(--fire);}
+
+/* THE ACTUAL PITCH */
+.pitch{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:32px;}
+.pitch-title{font-size:13px;font-weight:500;margin-bottom:16px;}
+.pitch-steps{display:flex;flex-direction:column;gap:12px;}
+.step{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--muted);flex-shrink:0;}
+.step-content{}
+.step-head{font-size:13px;font-weight:500;margin-bottom:3px;}
+.step-body{font-size:12px;color:var(--muted);line-height:1.55;}
+
+/* BURS ALERT */
+.alert{background:#0a0600;border:1px solid #4a2a00;border-radius:8px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start;margin-bottom:24px;}
+.alert-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.alert-text{font-size:12px;color:#d4903a;line-height:1.6;}
+.alert-text strong{color:var(--gold);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.fade{animation:fadeUp .4s ease both;}
+.d1{animation-delay:.04s}.d2{animation-delay:.1s}.d3{animation-delay:.16s}
+.d4{animation-delay:.22s}.d5{animation-delay:.28s}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- TOP -->
+<div class="top fade d1">
+  <div class="label">PayFlow Africa · User Research Guide</div>
+  <h1>Who to talk to first —<br>find the <em>hair-on-fire</em> segment</h1>
+  <p class="intro">Not all SMEs feel payroll pain equally. Your job is to find the ones whose house is already burning — businesses where the current process is costing real money, causing real stress, and where they'd pay for a fix today. Here's exactly who they are.</p>
+</div>
+
+<!-- BURS ALERT -->
+<div class="alert fade d1">
+  <span class="alert-icon">🔥</span>
+  <div class="alert-text"><strong>Why now is the perfect time to do these interviews:</strong> Botswana passed a sweeping new Employment and Labour Relations Bill in June 2025 — consolidating all employment laws and adding new compliance obligations. BURS also updated tax bands in April 2025. Any SME using last year's spreadsheet is already non-compliant. The compliance anxiety is at a peak. Go now.</div>
+</div>
+
+<hr>
+
+<!-- THE LOGIC -->
+<div class="sec fade d2">The filter logic</div>
+<div class="logic fade d2">
+  <div class="logic-title">3 variables that predict "hair on fire" payroll pain</div>
+  <div class="logic-grid">
+    <div class="logic-cell">
+      <div class="logic-icon">👥</div>
+      <div class="logic-head">10–80 employees</div>
+      <div class="logic-body">Too big for cash-in-hand. Too small to afford an accountant. This is where manual payroll is a real monthly nightmare.</div>
+    </div>
+    <div class="logic-cell">
+      <div class="logic-icon">📋</div>
+      <div class="logic-head">Formal sector, salaried</div>
+      <div class="logic-body">Businesses with PAYE obligations to BURS. If they're not filing ITW-7 monthly, they're accumulating fines they don't know about.</div>
+    </div>
+    <div class="logic-cell">
+      <div class="logic-icon">📅</div>
+      <div class="logic-head">Monthly recurring payroll</div>
+      <div class="logic-body">The pain must happen every single month. Not seasonal. Not one-off. The frustration compounds each cycle.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SEGMENTS -->
+<div class="sec fade d3">Ranked segments — most to least "on fire"</div>
+<div class="segments fade d3">
+
+  <!-- SEGMENT 1 -->
+  <div class="seg fire" onclick="toggle(this)">
+    <div class="seg-head">
+      <div class="seg-rank">1</div>
+      <div class="seg-info">
+        <div class="seg-name">Private schools & tutoring centres</div>
+        <div class="seg-sub">15–80 teachers + admin staff · Gaborone, Francistown</div>
+      </div>
+      <span class="seg-badge">🔥 Hair on fire</span>
+      <span class="seg-chevron">▾</span>
+    </div>
+    <div class="seg-body">
+      <div class="pain-bar"><div class="pain-label">Payroll pain intensity</div><div class="bar-track"><div class="bar-fill fire-fill" style="width:96%"></div></div></div>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-label">Why they hurt most</div>
+          <div class="detail-val">Teachers have complex pay: basic salary + housing allowance + subject supplements + overtime for exams. Different contracts for part-time vs full-time. Every month is a manual nightmare.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">The compliance trap</div>
+          <div class="detail-val">BURS requires PAYE on all staff including part-timers. Most private schools don't file correctly for contract teachers. The new 2025 Employment Bill adds leave tracking requirements they're not ready for.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Who to call</div>
+          <div class="detail-val">School owner/director OR the school bursar (finance admin). They're the ones personally doing payroll on Excel every month-end.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Willingness to pay</div>
+          <div class="detail-val">High. They already pay accountants BWP 500–2,000/month to file returns. PayFlow at BWP 300–800/month is cheaper and more comprehensive.</div>
+        </div>
+      </div>
+      <div class="find-section">
+        <div class="find-title">How to find them in Botswana</div>
+        <div class="find-grid">
+          <div class="find-chip"><strong>Google Maps</strong>"Private school Gaborone" — call the ones with 10+ Google reviews (established, have real staff)</div>
+          <div class="find-chip"><strong>Facebook Groups</strong>"Botswana Business Network" — private school owners post there regularly</div>
+          <div class="find-chip"><strong>Your network</strong>Ask family: which private school did you attend? Go talk to their admin office directly</div>
+          <div class="find-chip"><strong>Botswana Private Schools Assoc.</strong>Member list is semi-public — contact secretary for intro</div>
+        </div>
+      </div>
+      <div class="q-box">
+        <div class="q-box-title">Questions to ask the school bursar or owner</div>
+        <ul class="q-list">
+          <li>Walk me through exactly how you run payroll every month — what does that process look like?</li>
+          <li>What's the hardest part of paying staff every month? What takes the most time?</li>
+          <li>How do you calculate PAYE for teachers who work part-time or on contract?</li>
+          <li>When BURS changes tax rates, how do you find out and update your system?</li>
+          <li>How much time does it take you personally to process one month of payroll?</li>
+          <li>What happens if you make a mistake — have you ever had a problem with BURS?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEGMENT 2 -->
+  <div class="seg fire" onclick="toggle(this)">
+    <div class="seg-head">
+      <div class="seg-rank">2</div>
+      <div class="seg-info">
+        <div class="seg-name">Private clinics & medical practices</div>
+        <div class="seg-sub">10–50 staff · Doctors, nurses, receptionists, cleaners</div>
+      </div>
+      <span class="seg-badge">🔥 Hair on fire</span>
+      <span class="seg-chevron">▾</span>
+    </div>
+    <div class="seg-body">
+      <div class="pain-bar"><div class="pain-label">Payroll pain intensity</div><div class="bar-track"><div class="bar-fill fire-fill" style="width:93%"></div></div></div>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-label">Why they hurt most</div>
+          <div class="detail-val">Mixed workforce: salaried doctors, hourly nurses, shift-based cleaners. Overtime is constant. Night allowances. The doctor-owner is too busy seeing patients to do payroll properly.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">The compliance trap</div>
+          <div class="detail-val">Healthcare workers' overtime rules are strict under Botswana's Employment Act. The new 2025 Bill tightens enforcement. Most private clinics are exposed to back-pay liability they don't know about.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Who to call</div>
+          <div class="detail-val">The clinic owner (usually the lead doctor) OR a practice manager if they have one. In smaller clinics, the doctor literally does payroll themselves on a weekend.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Willingness to pay</div>
+          <div class="detail-val">Very high. Doctors earn well and value their time. If you can save them 3 hours/month, BWP 500/month is nothing. They're also very worried about BURS audits.</div>
+        </div>
+      </div>
+      <div class="find-section">
+        <div class="find-title">How to find them</div>
+        <div class="find-grid">
+          <div class="find-chip"><strong>Google Maps</strong>"Private clinic Gaborone" or "Medical practice Botswana" — call 10 of them</div>
+          <div class="find-chip"><strong>Yellow Pages BW</strong>Botswana Yellow Pages still has active healthcare listings</div>
+          <div class="find-chip"><strong>Walk in</strong>Go to the clinic, ask to speak to the practice manager about an admin question</div>
+          <div class="find-chip"><strong>Healthcare WhatsApp groups</strong>Botswana medical professional groups — ask your friend's family connections</div>
+        </div>
+      </div>
+      <div class="q-box">
+        <div class="q-box-title">Questions to ask the clinic owner or practice manager</div>
+        <ul class="q-list">
+          <li>Tell me how you currently manage paying your staff every month — take me through the full process.</li>
+          <li>How do you track overtime and night shift allowances for nurses?</li>
+          <li>What's the most stressful part of month-end for you personally?</li>
+          <li>Have you ever had a BURS inquiry or compliance issue? How did that go?</li>
+          <li>Do you use a payroll bureau or accountant? What do they charge you?</li>
+          <li>If you could eliminate one admin task in your practice, what would it be?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEGMENT 3 -->
+  <div class="seg gold" onclick="toggle(this)">
+    <div class="seg-head">
+      <div class="seg-rank">3</div>
+      <div class="seg-info">
+        <div class="seg-name">Security & cleaning companies</div>
+        <div class="seg-sub">20–150 guards/cleaners · Shift-based, minimum wage workers</div>
+      </div>
+      <span class="seg-badge">⚡ Very high pain</span>
+      <span class="seg-chevron">▾</span>
+    </div>
+    <div class="seg-body">
+      <div class="pain-bar"><div class="pain-label">Payroll pain intensity</div><div class="bar-track"><div class="bar-fill gold-fill" style="width:88%"></div></div></div>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-label">Why they hurt a lot</div>
+          <div class="detail-val">High headcount, low margin, complex shift patterns. Guards work 12-hour shifts, nights, weekends, public holidays. Every single variation changes the calculation. Errors cause staff to strike.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">The compliance trap</div>
+          <div class="detail-val">Security is specifically named in Botswana's minimum wage regulations. The new Employment Bill's overtime provisions hit this sector hard. Many guards are owed back-pay for holiday work.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Who to call</div>
+          <div class="detail-val">The operations manager or owner. In smaller security firms (20–60 guards), the owner runs payroll. In medium ones (60–150), there's a dedicated admin person drowning in it.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Willingness to pay</div>
+          <div class="detail-val">Medium-high. Margins are thin but the pain is extreme. They pay accountants already. Frame it as risk reduction (BURS penalties, labour disputes) not just convenience.</div>
+        </div>
+      </div>
+      <div class="find-section">
+        <div class="find-title">How to find them</div>
+        <div class="find-grid">
+          <div class="find-chip"><strong>Google</strong>"Security company Gaborone Botswana" — dozens of local firms</div>
+          <div class="find-chip"><strong>Shopping malls</strong>Every mall in Gaborone uses a local security firm. Ask the guard who their employer is.</div>
+          <div class="find-chip"><strong>BOCCIM directory</strong>Botswana Chamber of Commerce has a business directory</div>
+          <div class="find-chip"><strong>Cold call</strong>Call 20 security firms, say you're a student researching payroll challenges in Botswana</div>
+        </div>
+      </div>
+      <div class="q-box">
+        <div class="q-box-title">Questions to ask the owner/ops manager</div>
+        <ul class="q-list">
+          <li>How many guards do you currently employ, and how do you pay them each month?</li>
+          <li>How do you track who worked what shifts — especially night shifts and public holidays?</li>
+          <li>What's the hardest calculation you have to do every month when running payroll?</li>
+          <li>Have you ever had guards complain that their pay was wrong? What happened?</li>
+          <li>How much time does your team spend on payroll processing every month-end?</li>
+          <li>How do you make sure you're compliant with BURS on PAYE for all staff?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEGMENT 4 -->
+  <div class="seg gold" onclick="toggle(this)">
+    <div class="seg-head">
+      <div class="seg-rank">4</div>
+      <div class="seg-info">
+        <div class="seg-name">Growing retail shops & supermarkets</div>
+        <div class="seg-sub">10–40 staff · Family-owned, expanding beyond one location</div>
+      </div>
+      <span class="seg-badge">⚡ High pain</span>
+      <span class="seg-chevron">▾</span>
+    </div>
+    <div class="seg-body">
+      <div class="pain-bar"><div class="pain-label">Payroll pain intensity</div><div class="bar-track"><div class="bar-fill gold-fill" style="width:75%"></div></div></div>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-label">Why they hurt</div>
+          <div class="detail-val">As family shops grow from 3 staff to 15+, the informal cash-in-hand system breaks. They suddenly need PAYE, proper contracts, leave tracking. Most don't know where to start.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">The compliance trap</div>
+          <div class="detail-val">Many growing shops have never registered with BURS for PAYE. They're technically non-compliant and accumulating penalties. The new Employment Bill's enforcement focus makes this urgent.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Who to call</div>
+          <div class="detail-val">The shop owner (often a family patriarch/matriarch). They are personally handling wages. Go to the shop, ask to speak to the owner about a business question.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Willingness to pay</div>
+          <div class="detail-val">Medium. Price-sensitive. But the fear of BURS penalties and the 2025 compliance bill creates urgency. Lead with risk, not features.</div>
+        </div>
+      </div>
+      <div class="find-section">
+        <div class="find-title">How to find them</div>
+        <div class="find-grid">
+          <div class="find-chip"><strong>Walk around</strong>Any medium-sized independent shop in Gaborone's Game City, Rail Park Mall areas</div>
+          <div class="find-chip"><strong>Family network</strong>Ask your friend's family: which shops do you use? Who owns them?</div>
+          <div class="find-chip"><strong>Facebook Marketplace BW</strong>Many growing shops advertise there — message them</div>
+          <div class="find-chip"><strong>Botswana Business Directory</strong>govt.bw has a business registry you can search</div>
+        </div>
+      </div>
+      <div class="q-box">
+        <div class="q-box-title">Questions to ask the shop owner</div>
+        <ul class="q-list">
+          <li>How many people do you employ currently, and how do you pay them each month?</li>
+          <li>When did you start having to deal with PAYE and tax deductions — how did you figure that out?</li>
+          <li>What does your payroll process look like today — how long does it take you?</li>
+          <li>Have you ever had a problem with staff saying they were paid the wrong amount?</li>
+          <li>If you opened a second shop, how would you manage payroll for two locations?</li>
+          <li>What's the most time-consuming admin task in running this business?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEGMENT 5 -->
+  <div class="seg blue" onclick="toggle(this)">
+    <div class="seg-head">
+      <div class="seg-rank">5</div>
+      <div class="seg-info">
+        <div class="seg-name">Tech startups & professional services</div>
+        <div class="seg-sub">5–25 staff · Accountants, lawyers, consultants, agencies</div>
+      </div>
+      <span class="seg-badge">📊 Good signal</span>
+      <span class="seg-chevron">▾</span>
+    </div>
+    <div class="seg-body">
+      <div class="pain-bar"><div class="pain-label">Payroll pain intensity</div><div class="bar-track"><div class="bar-fill blue-fill" style="width:60%"></div></div></div>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-label">Why they're useful — but not #1</div>
+          <div class="detail-val">Easy to reach, English-speaking, tech-literate — but their pain is lower because they often already use Excel competently or have a part-time accountant. Good for product feedback, not the most desperate users.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">When to talk to them</div>
+          <div class="detail-val">After you've validated the core pain with schools, clinics, and security firms. Startups will give you articulate feedback. Use them to test your prototype, not to discover the problem.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Their specific pain</div>
+          <div class="detail-val">Consultants who work across countries (Botswana + South Africa or Zimbabwe) have multi-currency, multi-tax payroll that Excel can't handle. That's a real acute pain for them specifically.</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Who to call</div>
+          <div class="detail-val">The founder/managing partner. Find them through Botswana Innovation Hub, BOCCIM young entrepreneurs chapter, or LinkedIn — Botswana's professional network is small and reachable.</div>
+        </div>
+      </div>
+      <div class="q-box">
+        <div class="q-box-title">Questions to ask startup founders</div>
+        <ul class="q-list">
+          <li>How do you currently run payroll — do you have an in-house person or outsource it?</li>
+          <li>What's the most annoying part of doing payroll every month?</li>
+          <li>Have you ever paid someone across two countries? How did you handle that?</li>
+          <li>What tools do you currently use — Excel, QuickBooks, something else?</li>
+          <li>What would make you switch to a new payroll tool?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- WINNER SUMMARY -->
+<div class="winner fade d4">
+  <div class="winner-top">
+    <span class="fire-icon">🔥</span>
+    <div class="winner-title">The verdict: start with private schools</div>
+  </div>
+  <div class="winner-body">
+    Schools are your perfect first segment. <strong>They have 15–80 salaried staff</strong> with complex pay structures. <strong>The owner/bursar does payroll personally</strong> on Excel every month. <strong>BURS compliance is a real stress</strong> — the new 2025 Employment Bill added new obligations they're not ready for. <strong>They already pay accountants</strong> BWP 500–2,000/month, so price is not the objection. They're reachable (call them directly). They're concentrated in Gaborone. And your friend almost certainly knows someone who works at or attended a private school in Botswana — that's your warm intro.
+  </div>
+</div>
+
+<!-- HOW TO RUN THE INTERVIEWS -->
+<div class="sec fade d4">Your interview plan — this week</div>
+<div class="pitch fade d4">
+  <div class="pitch-title">20 interviews in 2 weeks — here's the exact playbook</div>
+  <div class="pitch-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-head">Get 5 warm intros from family/friends network</div>
+        <div class="step-body">Your friend's family in Botswana knows someone who runs a private school, clinic, or small business. Ask specifically: "Do you know anyone who owns a business with 10+ employees?" That's your first 5 interviews.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-head">Cold call 15 private schools in Gaborone</div>
+        <div class="step-body">Google "private school Gaborone" → pick 15 → call and say: <em>"Hi, I'm a Botswana student studying at Northwestern University in the US. I'm researching how businesses manage payroll in Botswana. Could I speak with whoever handles your school's payroll for 20 minutes? I just want to understand the process — I'm not selling anything."</em></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-head">Run the interview — listen, don't pitch</div>
+        <div class="step-body">Use the questions from the segment cards above. Record with permission or take notes. The goal is to hear them describe pain in their own words — phrases you can use directly in your product copy and pitch deck later.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-head">After 20 interviews: look for the pattern</div>
+        <div class="step-body">Write down every complaint you heard. Which phrases came up in 15 of the 20 interviews? That's your product's headline. Which problems came up in 3? That's a nice-to-have. Build what they kept repeating.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-head">Create a WhatsApp group with the most engaged 5–8</div>
+        <div class="step-body">At the end of the interview, if they were engaged, say: <em>"I'm building a tool to solve exactly this. Would you be willing to be one of the first people to see it and give feedback? I'll add you to a small group."</em> These become your design partners and first paying customers.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT NOT TO DO -->
+<div class="sec fade d5">What not to say in the interview</div>
+<div class="logic fade d5">
+  <div class="logic-title">These questions will give you useless answers — avoid them</div>
+  <div class="logic-grid">
+    <div class="logic-cell">
+      <div class="logic-icon">❌</div>
+      <div class="logic-head">"Would you use our product?"</div>
+      <div class="logic-body">Everyone says yes to be polite. Means nothing. Instead ask how they do it today and listen for pain.</div>
+    </div>
+    <div class="logic-cell">
+      <div class="logic-icon">❌</div>
+      <div class="logic-head">"What features would you want?"</div>
+      <div class="logic-body">Users design for what they know, not what's possible. They'll say "export to Excel" when what they need is to never use Excel again.</div>
+    </div>
+    <div class="logic-cell">
+      <div class="logic-icon">❌</div>
+      <div class="logic-head">"I'm building a payroll app—"</div>
+      <div class="logic-body">The moment you pitch, they stop being honest. They tell you what they think you want to hear. Ask about their life, not about your product.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+function toggle(el){
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>
